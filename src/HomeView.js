@@ -1,25 +1,24 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Button, Switch, Alert } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import ArtistList from './ArtistList'
+import {getMusicData} from './api-client'
 
 export default class HomeView extends Component {
-  constructor(props){
-    super(props)
-    this.state = {
-      switchValue: false,
-    }
+  state = {
+    artists: null
   }
-  onChange = (value) => {
-    console.log(`El switch cambiara a ${value}`)
+
+  componentDidMount() {
+    getMusicData().then(data => this.setState({ artists: data }))
   }
+
+
   render() {
-    const data = this.props.text1;
-    console.log(`El valor recibido es ${data}`)
+    const artists = this.state.artists
+
     return (
       <View style={styles.container}>
-        <Switch
-          onValueChange={() => this.onChange(!this.state.switchValue)}
-          value={this.state.switchValue}
-        />
+        {artists && <ArtistList artists={artists}/>}
       </View>
     );
   }
@@ -28,9 +27,6 @@ export default class HomeView extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'center'
+    backgroundColor: 'gray',
   }
 });
